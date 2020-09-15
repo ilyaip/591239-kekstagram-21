@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Илья Ипаткин](https://up.htmlacademy.ru/javascript/21/user/591239).
-* Наставник: `Неизвестно`.
+* Наставник: [Саша Джинн](https://htmlacademy.ru/profile/jinonensk).
 
 ---
 
