@@ -36,13 +36,32 @@ var createArray = function () {
 
 createArray();
 
+var getImg = function (className) {
+  var picturElement = pictureTemplate.cloneNode(true);
+
+  picturElement.querySelector(className).src = array[i].url;
+};
+
+var getLike = function (className) {
+  var picturElement = pictureTemplate.cloneNode(true);
+
+  picturElement.querySelector(className).textContent = array[i].like;
+};
+
+var getComment = function (className) {
+  var picturElement = pictureTemplate.cloneNode(true);
+
+  picturElement.querySelector(className).textContent = array[i].comments;
+};
+
 for (var i = 0; i < array.length; i++) {
   var picturElement = pictureTemplate.cloneNode(true);
 
-  picturElement.querySelector(".picture__img").src = array[i].url;
-  picturElement.querySelector(".picture__likes").textContent = array[i].like;
-  picturElement.querySelector(".picture__comments").textContent = array[i].comments;
+  getImg(".picture__img");
+  getLike(".picture__likes");
+  getComment(".picture__comments");
 
   pictureList.appendChild(picturElement);
 }
+
 
