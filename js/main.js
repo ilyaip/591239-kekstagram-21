@@ -12,8 +12,8 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-var createComment = function (COMMENTS_NUMBER) {
-  for (var i = 0; i < COMMENTS_NUMBER; i++) {
+var createComments = function (commentsNumber) {
+  for (var i = 0; i < commentsNumber; i++) {
     COMMENTS.push({
       avatar: `img/avatar-${getRandomInt(1, 6)}.svg`,
       message: COMMENT_DESCRIPTION[getRandomInt(0, COMMENT_DESCRIPTION.length - 1)],
@@ -24,44 +24,30 @@ var createComment = function (COMMENTS_NUMBER) {
 
 var createArrayComments = function () {
   for (var i = 0; i < ARRAY_COMMENTS_LENGHT; i++) {
-    var NUMBER_OF_COMMENT = getRandomInt(1, 5);
+    var numberOfComment = getRandomInt(1, 5);
     randomComment.push({
       url: `photos/${getRandomInt(1, 25)}.jpg`,
       description: "Very nice pic",
       like: `${getRandomInt(15, 200)}`,
-      comments: createComment(NUMBER_OF_COMMENT)
+      comments: createComments(numberOfComment)
     });
   }
 };
 
 createArrayComments();
 
-var getImg = function (className) {
+var getComment = function () {
   var picturElement = pictureTemplate.cloneNode(true);
 
-  picturElement.querySelector(className).src = array[i].url;
-};
+  picturElement.querySelector(".picture__img").src = randomComment[i].url;
+  picturElement.querySelector(".picture__likes").textContent = randomComment[i].like;
+  picturElement.querySelector(".picture__comments").textContent = randomComment[i].comments;
 
-var getLike = function (className) {
-  var picturElement = pictureTemplate.cloneNode(true);
-
-  picturElement.querySelector(className).textContent = array[i].like;
-};
-
-var getComment = function (className) {
-  var picturElement = pictureTemplate.cloneNode(true);
-
-  picturElement.querySelector(className).textContent = array[i].comments;
+  pictureList.appendChild(picturElement);
 };
 
 for (var i = 0; i < randomComment.length; i++) {
-  var picturElement = pictureTemplate.cloneNode(true);
-
-  getImg(".picture__img");
-  getLike(".picture__likes");
-  getComment(".picture__comments");
-
-  pictureList.appendChild(picturElement);
+  getComment();
 }
 
 
