@@ -112,12 +112,13 @@ closeEditingForm.addEventListener("click", function () {
 // Изменение масштаба фото
 var MAX_ZOOM = 100;
 var MIN_ZOOM = 25;
+var STEP = 25;
 
 controlValue.value = MAX_ZOOM + "%";
 
 var increaseZoom = function () {
   if (Number.parseInt(controlValue.value) < MAX_ZOOM) {
-    controlValue.value = Number.parseInt(controlValue.value) + MIN_ZOOM + "%";
+    controlValue.value = Number.parseInt(controlValue.value) + STEP + "%";
     uploadImg.style.transform = `scale(0.${Number.parseInt(controlValue.value)})`;
   }
   if (Number.parseInt(controlValue.value) > 75) {
@@ -154,15 +155,89 @@ var effectPhobos = document.querySelector("#effect-phobos");
 var effectHeat = document.querySelector("#effect-heat");
 var effectNone = document.querySelector("#effect-none");
 var effectList = document.querySelectorAll(".effects__item");
+var effectLevelDepth = document.querySelector(".effect-level__depth");
+// var FILTERS = {
+//   chrome: {
+//     TITLE: "chrome",
+//     CLASS: "effects__preview--chrome",
+//     DEFAULT_FILTER: "graqscale(1)",
+//     MIN_VALUE: 0,
+//     MAX_VALUE: "",
+//   },
+//   sepia: {
+//     TITLE: "sepia",
+//     CLASS: "effects__preview--sepia",
+//     DEFAULT_FILTER: "sepia(1)",
+//     MIN_VALUE: 0,
+//     MAX_VALUE: 1,
+//     UNIT: "",
+//   },
+//   marvin: {
+//     DEFAULT_FILTER: "invert(100%)"
+//   },
+//   phobos: {
+//     DEFAULT_FILTER: "blur(3px)"
+//   },
+//   heat: {
+//     DEFAULT_FILTER: "brightness(3)"
+//   },
+//   none: {
+//     DEFAULT_FILTER: "none"
+//   }
+// };
 
+var FILTERS = {
+  chrome: {
+    DEFAULT: "grayscale(1)",
+    MIN_VALUE: "0",
+    MAX_VALUE: "1",
+    UNIT: ""
+  },
+  sepia: {
+    DEFAULT: "sepia(1)",
+    MIN_VALUE: "0",
+    MAX_VALUE: "1",
+    UNIT: ""
+  },
+  marvin: {
+    DEFAULT: "invert(100%)",
+    MIN_VALUE: "0",
+    MAX_VALUE: "100",
+    UNIT: "%"
+  },
+  phobos: {
+    DEFAULT: "blur(3px)",
+    MIN_VALUE: "0",
+    MAX_VALUE: "3",
+    UNIT: "px"
+  },
+  heat: {
+    DEFAULT: "brightness(3)",
+    MIN_VALUE: "1",
+    MAX_VALUE: "3",
+    UNIT: ""
+  },
+  none: {
+    DEFAULT: "none"
+  },
+};
+
+var PIN_LENGHT = 450;
+var currentEffect;
+var pinValue;
 
 var filterChange = function (evt) {
   if (evt.target && evt.target.matches('input[type="radio"]')) {
-    uploadImg.classList.add(`effects__preview--${evt.target.value}`);
+    // uploadImg.classList.add(`effects__preview--${evt.target.value}`);
+    uploadImg.style.filter = FILTERS[evt.target.value].DEFAULT;
   }
+  pinValue = effectLevelDepth.offsetWidth;
+  console.log(pinValue);
+  currentEffect = evt.target.value;
 };
 
-uploadForm.addEventListener("change", cleanClass);
+// uploadForm.addEventListener("change", cleanFilters);
+// uploadForm.addEventListener("change", cleanClass);
 uploadForm.addEventListener("change", filterChange);
 
 function checkedInput() {
@@ -175,40 +250,49 @@ function checkedInput() {
 
 uploadForm.addEventListener("change", checkedInput);
 
-function cleanClass() {
-  uploadImg.classList.remove("effects__preview--chrome");
-  uploadImg.classList.remove("effects__preview--sepia");
-  uploadImg.classList.remove("effects__preview--marvin");
-  uploadImg.classList.remove("effects__preview--phobos");
-  uploadImg.classList.remove("effects__preview--heat");
+// function cleanFilters() {
+//   uploadImg.style.filter = "none";
+// }
+
+// function cleanClass() {
+//   uploadImg.classList = "";
+// }
+
+function calculationOfSaturation(value) {
+  return (FILTERS[currentEffect].MAX_VALUE - FILTERS[currentEffect].MIN_VALUE) * (value / PIN_LENGHT) + FILTERS[currentEffect].MIN_VALUE;
 }
 
-function test() {
 pinSlider.addEventListener("mouseup", function () {
-    if (uploadImg.classList.contains("effects__preview--chrome")) {
-      uploadImg.style.filter = "grayscale(0.5)";
-    } else if (uploadImg.classList.contains("effects__preview--sepia")) {
-      uploadImg.style.filter = "sepia(1)";
-    } else if (uploadImg.classList.contains("effects__preview--marvin")) {
-      uploadImg.style.filter = "invert(10%)";
-    } else if (uploadImg.classList.contains("effects__preview--phobos")) {
-      uploadImg.style.filter = "blur(10px)";
-    } else if (uploadImg.classList.contains("effects__preview--heat")) {
-      uploadImg.style.filter = "brightness(2)";
-    } else if (effectNone) {
+  switch (currentEffect) {
+    case "chrome":
+      uploadImg.style.filter = `grayscale(${calculationOfSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
+      break;
+    case "sepia":
+      uploadImg.style.filter = `sepia(${calculationOfSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
+      break;
+    case "marvin":
+      uploadImg.style.filter = `invert(${calculationOfSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
+      break;
+    case "phobos":
+      uploadImg.style.filter = `blur(${calculationOfSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
+      break;
+    case "heat":
+      uploadImg.style.filter = `brightness(${calculationOfSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
+      break;
+    case "none":
       uploadImg.style.filter = "none";
-    }
-  });
-}
+      break;
+  }
+});
 
-uploadForm.addEventListener("change", test);
 
 // Валидация хэш-тегов
 
 var inputHashtags = document.querySelector(".text__hashtags");
 var MIN_HASHTAG_LENGTH = 2;
 var MAX_HASHTAG_LENGTH = 20;
-var re = /^#[\w\d\й\Й\ц\Ц\у\У\к\К\е\Е\н\Н\г\Г\ш\Ш\щ\Щ\з\З\х\Х\ъ\ф\Ф\ы\Ы\в\В\а\А\п\П\р\Р\о\О\л\Л\д\Д\ж\Ж\э\Э\я\Я\ч\Ч\с\С\м\М\и\И\т\Т\ь\Ь\б\Б\ю\Ю]*$/;
+var MAX_HASHTAGS = 5;
+var checkHashtags = /^#[a-zа-я0-9]{1,20}$/;
 
 var comparisonOfHashtags = function (array) {
   for (var i = 0; i < array.length; i++) {
@@ -222,16 +306,15 @@ var comparisonOfHashtags = function (array) {
 
 inputHashtags.addEventListener('input', function () {
   var hashtagsArray = inputHashtags.value.trim().toLowerCase().split(/\s+/);
-  console.log(hashtagsArray);
   for (var i = 0; i < hashtagsArray.length; i++) {
     var valueLength = hashtagsArray[i].length;
     if (valueLength < MIN_HASHTAG_LENGTH) {
       inputHashtags.setCustomValidity("Хэш-тег не может состоять только из #");
     } else if (valueLength >= MAX_HASHTAG_LENGTH) {
       inputHashtags.setCustomValidity("Хэш-тег должен содержать не польше 20-ти символов");
-    } else if (!re.test(hashtagsArray[i])) {
+    } else if (!checkHashtags.test(hashtagsArray[i])) {
       inputHashtags.setCustomValidity("Хэш-тег должен начинаться с # и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.");
-    } else if (i > 4) {
+    } else if (i >= MAX_HASHTAGS) {
       inputHashtags.setCustomValidity("Нельзя указать больше 5 хэш-тегов");
     } else {
       inputHashtags.setCustomValidity('');
