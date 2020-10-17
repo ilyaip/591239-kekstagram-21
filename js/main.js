@@ -199,6 +199,8 @@ var PIN_LENGHT = 450;
 var currentEffect;
 var pinValue;
 
+uploadForm.addEventListener("change", checkedInput);
+
 var filterChange = function (evt) {
   if (evt.target && evt.target.matches('input[type="radio"]')) {
     uploadImg.style.filter = FILTERS[evt.target.value].DEFAULT;
@@ -216,8 +218,6 @@ function checkedInput() {
     pinField.classList.remove("hidden");
   }
 }
-
-uploadForm.addEventListener("change", checkedInput);
 
 function cleanFilters() {
   uploadImg.style.filter = "none";
