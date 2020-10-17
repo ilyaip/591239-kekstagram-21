@@ -102,11 +102,14 @@ var cleanInput = function () {
 
 inputUploadFile.addEventListener("change", function () {
   openForm();
+  controlValue.value = "100%";
+  uploadImg.style.transform = "scale(1)";
 });
 
 closeEditingForm.addEventListener("click", function () {
   closeForm();
   cleanInput();
+  cleanFilters();
 });
 
 // Изменение масштаба фото
@@ -117,20 +120,17 @@ var STEP = 25;
 controlValue.value = MAX_ZOOM + "%";
 
 var increaseZoom = function () {
-  if (Number.parseInt(controlValue.value) < MAX_ZOOM) {
-    controlValue.value = Number.parseInt(controlValue.value) + STEP + "%";
-    uploadImg.style.transform = `scale(0.${Number.parseInt(controlValue.value)})`;
-  }
-  if (Number.parseInt(controlValue.value) > 75) {
-    uploadImg.style.transform = `scale(1)`;
-  }
+  var oldValue = Number.parseInt(controlValue.value);
+  var newValue = oldValue + STEP;
+  var result = newValue >= MAX_ZOOM ? MAX_ZOOM : newValue;
+  controlValue.value = result + "%";
 };
 
 var decreaseZoom = function () {
-  if (Number.parseInt(controlValue.value) > MIN_ZOOM) {
-    controlValue.value = Number.parseInt(controlValue.value) - MIN_ZOOM + "%";
-    uploadImg.style.transform = `scale(0.${Number.parseInt(controlValue.value)})`;
-  }
+  var oldValue = Number.parseInt(controlValue.value);
+  var newValue = oldValue - STEP;
+  var result = newValue <= MIN_ZOOM ? MIN_ZOOM : newValue;
+  controlValue.value = result + "%";
 };
 
 controlBigger.addEventListener("click", function () {
@@ -147,44 +147,8 @@ var pinSlider = document.querySelector(".effect-level__pin");
 var effectLevelValue = document.querySelector(".effect-level__value");
 var pinField = document.querySelector(".effect-level");
 var uploadForm = document.querySelector(".img-upload__form");
-var inputFilter = document.querySelectorAll(".effects__radio");
-var effectChrome = document.querySelector("#effect-chrome");
-var effectSepia = document.querySelector("#effect-sepia");
-var effectMarvin = document.querySelector("#effect-marvin");
-var effectPhobos = document.querySelector("#effect-phobos");
-var effectHeat = document.querySelector("#effect-heat");
 var effectNone = document.querySelector("#effect-none");
-var effectList = document.querySelectorAll(".effects__item");
 var effectLevelDepth = document.querySelector(".effect-level__depth");
-// var FILTERS = {
-//   chrome: {
-//     TITLE: "chrome",
-//     CLASS: "effects__preview--chrome",
-//     DEFAULT_FILTER: "graqscale(1)",
-//     MIN_VALUE: 0,
-//     MAX_VALUE: "",
-//   },
-//   sepia: {
-//     TITLE: "sepia",
-//     CLASS: "effects__preview--sepia",
-//     DEFAULT_FILTER: "sepia(1)",
-//     MIN_VALUE: 0,
-//     MAX_VALUE: 1,
-//     UNIT: "",
-//   },
-//   marvin: {
-//     DEFAULT_FILTER: "invert(100%)"
-//   },
-//   phobos: {
-//     DEFAULT_FILTER: "blur(3px)"
-//   },
-//   heat: {
-//     DEFAULT_FILTER: "brightness(3)"
-//   },
-//   none: {
-//     DEFAULT_FILTER: "none"
-//   }
-// };
 
 var FILTERS = {
   chrome: {
@@ -222,22 +186,27 @@ var FILTERS = {
   },
 };
 
+var EFFECTS = {
+  CHROME: "chrome",
+  SEPIA: "sepia",
+  MARVIN: "marvin",
+  PHOBOS: "phobos",
+  HEAT: "heat",
+  NONE: "none"
+};
+
 var PIN_LENGHT = 450;
 var currentEffect;
 var pinValue;
 
 var filterChange = function (evt) {
   if (evt.target && evt.target.matches('input[type="radio"]')) {
-    // uploadImg.classList.add(`effects__preview--${evt.target.value}`);
     uploadImg.style.filter = FILTERS[evt.target.value].DEFAULT;
   }
   pinValue = effectLevelDepth.offsetWidth;
-  console.log(pinValue);
   currentEffect = evt.target.value;
 };
 
-// uploadForm.addEventListener("change", cleanFilters);
-// uploadForm.addEventListener("change", cleanClass);
 uploadForm.addEventListener("change", filterChange);
 
 function checkedInput() {
@@ -250,41 +219,36 @@ function checkedInput() {
 
 uploadForm.addEventListener("change", checkedInput);
 
-// function cleanFilters() {
-//   uploadImg.style.filter = "none";
-// }
+function cleanFilters() {
+  uploadImg.style.filter = "none";
+}
 
-// function cleanClass() {
-//   uploadImg.classList = "";
-// }
-
-function calculationOfSaturation(value) {
-  return (FILTERS[currentEffect].MAX_VALUE - FILTERS[currentEffect].MIN_VALUE) * (value / PIN_LENGHT) + FILTERS[currentEffect].MIN_VALUE;
+function getSaturation(value) {
+  return Math.round(((FILTERS[currentEffect].MAX_VALUE - FILTERS[currentEffect].MIN_VALUE) * (value / PIN_LENGHT) + FILTERS[currentEffect].MIN_VALUE) * 100) / 100;
 }
 
 pinSlider.addEventListener("mouseup", function () {
   switch (currentEffect) {
-    case "chrome":
-      uploadImg.style.filter = `grayscale(${calculationOfSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
+    case EFFECTS.CHROME:
+      uploadImg.style.filter = `grayscale(${getSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
       break;
-    case "sepia":
-      uploadImg.style.filter = `sepia(${calculationOfSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
+    case EFFECTS.SEPIA:
+      uploadImg.style.filter = `sepia(${getSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
       break;
-    case "marvin":
-      uploadImg.style.filter = `invert(${calculationOfSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
+    case EFFECTS.MARVIN:
+      uploadImg.style.filter = `invert(${Math.round(getSaturation(pinValue)) + FILTERS[currentEffect].UNIT})`;
       break;
-    case "phobos":
-      uploadImg.style.filter = `blur(${calculationOfSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
+    case EFFECTS.PHOBOS:
+      uploadImg.style.filter = `blur(${getSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
       break;
-    case "heat":
-      uploadImg.style.filter = `brightness(${calculationOfSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
+    case EFFECTS.HEAT:
+      uploadImg.style.filter = `brightness(${getSaturation(pinValue) + FILTERS[currentEffect].UNIT})`;
       break;
-    case "none":
+    case EFFECTS.NONE:
       uploadImg.style.filter = "none";
       break;
   }
 });
-
 
 // Валидация хэш-тегов
 
@@ -293,16 +257,6 @@ var MIN_HASHTAG_LENGTH = 2;
 var MAX_HASHTAG_LENGTH = 20;
 var MAX_HASHTAGS = 5;
 var checkHashtags = /^#[a-zа-я0-9]{1,20}$/;
-
-var comparisonOfHashtags = function (array) {
-  for (var i = 0; i < array.length; i++) {
-    for (var j = (i + 1); j < array.length; j++) {
-      if (array[i] === array[j]) {
-        return true;
-      }
-    }
-  }
-};
 
 inputHashtags.addEventListener('input', function () {
   var hashtagsArray = inputHashtags.value.trim().toLowerCase().split(/\s+/);
@@ -319,9 +273,12 @@ inputHashtags.addEventListener('input', function () {
     } else {
       inputHashtags.setCustomValidity('');
     }
-  }
-  if (comparisonOfHashtags(hashtagsArray)) {
-    inputHashtags.setCustomValidity("Хэш-теги не должны повторяться");
+    var duplicatedHashtags = hashtagsArray.filter(function (item) {
+      return item === hashtagsArray[i];
+    });
+    if (duplicatedHashtags.length > 1) {
+      inputHashtags.setCustomValidity("Хэш-теги не могут быть одинаковыми");
+    }
   }
 });
 
