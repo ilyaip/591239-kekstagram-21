@@ -124,6 +124,7 @@ var increaseZoom = function () {
   var newValue = oldValue + STEP;
   var result = newValue >= MAX_ZOOM ? MAX_ZOOM : newValue;
   controlValue.value = result + "%";
+  uploadImg.style.transform = `scale(${result / 100})`;
 };
 
 var decreaseZoom = function () {
@@ -131,6 +132,7 @@ var decreaseZoom = function () {
   var newValue = oldValue - STEP;
   var result = newValue <= MIN_ZOOM ? MIN_ZOOM : newValue;
   controlValue.value = result + "%";
+  uploadImg.style.transform = `scale(${result / 100})`;
 };
 
 controlBigger.addEventListener("click", function () {
