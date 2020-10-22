@@ -129,7 +129,7 @@
         uploadImg.style.filter = `sepia(${getSaturation(value) + FILTERS[currentEffect].UNIT})`;
         break;
       case EFFECTS.MARVIN:
-        uploadImg.style.filter = `invert(${Math.round(getSaturation(value)) + FILTERS[currentEffect].UNIT})`;
+        uploadImg.style.filter = `invert(${getSaturation(value) + FILTERS[currentEffect].UNIT})`;
         break;
       case EFFECTS.PHOBOS:
         uploadImg.style.filter = `blur(${getSaturation(value) + FILTERS[currentEffect].UNIT})`;
@@ -168,14 +168,16 @@
         y: moveEvt.clientY
       };
 
-      if ((pinSlider.offsetLeft >= 0) && (pinSlider.offsetLeft <= 450)) {
+      if ((Number.parseInt(effectLevelDepth.style.width) >= 1) && (Number.parseInt(effectLevelDepth.style.width) <= 100)) {
         pinSlider.style.left = (pinSlider.offsetLeft - shift.x) + "px";
         console.log(pinSlider.offsetLeft);
-        effectLevelDepth.style.width = `${pinSlider.offsetLeft}px`;
+        effectLevelDepth.style.width = pinSlider.offsetLeft * 100 / PIN_LENGHT + "%";
         console.log(effectLevelDepth.style.width);
       }
+
       pinValue = pinSlider.offsetLeft;
       pinSliderValue.value = pinValue;
+      getValueSaturation(pinValue);
 
     };
 
@@ -188,13 +190,18 @@
       if (dragged) {
         var onClickPreventDefault = function (clickEvt) {
           clickEvt.preventDefault();
-          pinSlider.removeEventListener('click', onClickPreventDefault)
+          pinSlider.removeEventListener('click', onClickPreventDefault);
         };
         pinSlider.addEventListener('click', onClickPreventDefault);
       }
 
-      getValueSaturation(pinValue);
+      if (Number.parseInt(effectLevelDepth.style.width) < 1) {
+        effectLevelDepth.style.width = 1 + "%";
+      } else if (Number.parseInt(effectLevelDepth.style.width) > 100) {
+        effectLevelDepth.style.width = 100 + "%";
+      }
     };
+
 
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
