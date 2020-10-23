@@ -40,6 +40,7 @@
   var effectNone = document.querySelector("#effect-none");
   var effectLevelDepth = document.querySelector(".effect-level__depth");
   var uploadImg = document.querySelector(".img-upload__preview");
+  var sliderWidth = document.querySelector(".effect-level__line");
 
   var FILTERS = {
     chrome: {
@@ -146,10 +147,7 @@
   pinSlider.addEventListener("mousedown", function (evt) {
     evt.preventDefault();
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
+    var startX = evt.clientX;
 
     var dragged = false;
 
@@ -158,26 +156,18 @@
 
       dragged = true;
 
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
+      var shift = startX - moveEvt.clientX;
+      startX = moveEvt.clientX;
+      var newX = pinSlider.offsetLeft - shift;
 
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-
-      if ((Number.parseInt(effectLevelDepth.style.width) >= 1) && (Number.parseInt(effectLevelDepth.style.width) <= 100)) {
-        pinSlider.style.left = (pinSlider.offsetLeft - shift.x) + "px";
-        console.log(pinSlider.offsetLeft);
+      if (newX > 0 && newX < sliderWidth.offsetWidth) {
+        pinSlider.style.left = newX + "px";
         effectLevelDepth.style.width = pinSlider.offsetLeft * 100 / PIN_LENGHT + "%";
-        console.log(effectLevelDepth.style.width);
       }
 
-      pinValue = pinSlider.offsetLeft;
-      pinSliderValue.value = pinValue;
-      getValueSaturation(pinValue);
+      getValueSaturation(newX);
+      console.log(newX);
+      pinSliderValue.value = Number.parseInt(effectLevelDepth.style.width);
 
     };
 
@@ -193,12 +183,6 @@
           pinSlider.removeEventListener('click', onClickPreventDefault);
         };
         pinSlider.addEventListener('click', onClickPreventDefault);
-      }
-
-      if (Number.parseInt(effectLevelDepth.style.width) < 1) {
-        effectLevelDepth.style.width = 1 + "%";
-      } else if (Number.parseInt(effectLevelDepth.style.width) > 100) {
-        effectLevelDepth.style.width = 100 + "%";
       }
     };
 
