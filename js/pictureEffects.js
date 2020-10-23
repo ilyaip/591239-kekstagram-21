@@ -40,6 +40,7 @@
   var effectNone = document.querySelector("#effect-none");
   var effectLevelDepth = document.querySelector(".effect-level__depth");
   var uploadImg = document.querySelector(".img-upload__preview");
+  var sliderWidth = document.querySelector(".effect-level__line");
 
   var FILTERS = {
     chrome: {
@@ -86,7 +87,6 @@
     NONE: "none"
   };
 
-  var PIN_LENGHT = 450;
   var currentEffect;
   var pinValue;
   var sliderDefaultValue = {
@@ -117,7 +117,7 @@
   }
 
   function getSaturation(value) {
-    return Math.round(((FILTERS[currentEffect].MAX_VALUE - FILTERS[currentEffect].MIN_VALUE) * (value / PIN_LENGHT) + FILTERS[currentEffect].MIN_VALUE) * 100) / 100;
+    return Math.round(((FILTERS[currentEffect].MAX_VALUE - FILTERS[currentEffect].MIN_VALUE) * (value / sliderWidth.offsetWidth) + FILTERS[currentEffect].MIN_VALUE) * 100) / 100;
   }
 
   function getValueSaturation(value) {
@@ -129,7 +129,7 @@
         uploadImg.style.filter = `sepia(${getSaturation(value) + FILTERS[currentEffect].UNIT})`;
         break;
       case EFFECTS.MARVIN:
-        uploadImg.style.filter = `invert(${Math.round(getSaturation(value)) + FILTERS[currentEffect].UNIT})`;
+        uploadImg.style.filter = `invert(${getSaturation(value) + FILTERS[currentEffect].UNIT})`;
         break;
       case EFFECTS.PHOBOS:
         uploadImg.style.filter = `blur(${getSaturation(value) + FILTERS[currentEffect].UNIT})`;
@@ -146,10 +146,7 @@
   pinSlider.addEventListener("mousedown", function (evt) {
     evt.preventDefault();
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
+    var startX = evt.clientX;
 
     var dragged = false;
 
@@ -158,24 +155,18 @@
 
       dragged = true;
 
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
+      var shift = startX - moveEvt.clientX;
+      startX = moveEvt.clientX;
+      var newX = pinSlider.offsetLeft - shift;
 
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-
-      if ((pinSlider.offsetLeft >= 0) && (pinSlider.offsetLeft <= 450)) {
-        pinSlider.style.left = (pinSlider.offsetLeft - shift.x) + "px";
-        console.log(pinSlider.offsetLeft);
-        effectLevelDepth.style.width = `${pinSlider.offsetLeft}px`;
-        console.log(effectLevelDepth.style.width);
+      if (newX > 0 && newX < sliderWidth.offsetWidth) {
+        pinSlider.style.left = newX + "px";
+        effectLevelDepth.style.width = pinSlider.offsetLeft * 100 / sliderWidth.offsetWidth + "%";
       }
-      pinValue = pinSlider.offsetLeft;
-      pinSliderValue.value = pinValue;
+
+      getValueSaturation(newX);
+      console.log(newX);
+      pinSliderValue.value = Number.parseInt(effectLevelDepth.style.width);
 
     };
 
@@ -188,13 +179,12 @@
       if (dragged) {
         var onClickPreventDefault = function (clickEvt) {
           clickEvt.preventDefault();
-          pinSlider.removeEventListener('click', onClickPreventDefault)
+          pinSlider.removeEventListener('click', onClickPreventDefault);
         };
         pinSlider.addEventListener('click', onClickPreventDefault);
       }
-
-      getValueSaturation(pinValue);
     };
+
 
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
