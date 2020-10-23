@@ -87,7 +87,6 @@
     NONE: "none"
   };
 
-  var PIN_LENGHT = 450;
   var currentEffect;
   var pinValue;
   var sliderDefaultValue = {
@@ -118,7 +117,7 @@
   }
 
   function getSaturation(value) {
-    return Math.round(((FILTERS[currentEffect].MAX_VALUE - FILTERS[currentEffect].MIN_VALUE) * (value / PIN_LENGHT) + FILTERS[currentEffect].MIN_VALUE) * 100) / 100;
+    return Math.round(((FILTERS[currentEffect].MAX_VALUE - FILTERS[currentEffect].MIN_VALUE) * (value / sliderWidth.offsetWidth) + FILTERS[currentEffect].MIN_VALUE) * 100) / 100;
   }
 
   function getValueSaturation(value) {
@@ -162,7 +161,7 @@
 
       if (newX > 0 && newX < sliderWidth.offsetWidth) {
         pinSlider.style.left = newX + "px";
-        effectLevelDepth.style.width = pinSlider.offsetLeft * 100 / PIN_LENGHT + "%";
+        effectLevelDepth.style.width = pinSlider.offsetLeft * 100 / sliderWidth.offsetWidth + "%";
       }
 
       getValueSaturation(newX);
