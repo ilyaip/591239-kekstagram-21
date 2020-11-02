@@ -22,21 +22,6 @@
   var commentsNumberNew = document.querySelector(".comments-count");
   var commentsView = document.querySelector(".social__comment-count");
   var closeBigPhoto = document.querySelector(".big-picture__cancel");
-  // var photosArray = [];
-
-  // function loadComments(array) {
-  //   if (array.comments.length > MAX_COMMENTS) {
-  //     commentsLoader.addEventListener("click", function () {
-  //       MAX_COMMENTS += 5;
-  //       console.log(MAX_COMMENTS);
-  //       for (let i = (MAX_COMMENTS - DEFAULT_COMMENTS); i < MAX_COMMENTS; i++) {
-  //         createCommentsNew(array.comments[i]);
-  //       }
-  //     });
-  //   } else {
-  //     commentsLoader.classList.add("hidden");
-  //   }
-  // }
 
   function createCommentsNew(array) {
     var item = document.createElement("li");
@@ -102,20 +87,20 @@
       }
       commentsLoader.addEventListener("click", function () {
         if (photo.comments.length > MAX_COMMENTS) {
-          if (photo.comments.length - MAX_COMMENTS > MAX_COMMENTS) {
+          if (photo.comments.length - MAX_COMMENTS > DEFAULT_COMMENTS) {
             MAX_COMMENTS += 5;
-            console.log(MAX_COMMENTS);
+            console.log(MAX_COMMENTS, "big");
             commentsView.textContent = `${MAX_COMMENTS} из ${photo.comments.length} комментариев`;
             for (let i = (MAX_COMMENTS - DEFAULT_COMMENTS); i < MAX_COMMENTS; i++) {
               createCommentsNew(photo.comments[i]);
             }
           } else {
-            MAX_COMMENTS = photo.comments.length - MAX_COMMENTS;
-            console.log(MAX_COMMENTS);
+            console.log(MAX_COMMENTS, "small");
             commentsView.textContent = `${photo.comments.length} из ${photo.comments.length} комментариев`;
-            for (let i = (photo.comments.length % DEFAULT_COMMENTS); i < photo.comments.length; i++) {
+            for (let i = MAX_COMMENTS; i < photo.comments.length; i++) {
               createCommentsNew(photo.comments[i]);
             }
+            commentsLoader.classList.add("hidden");
           }
         } else {
           commentsLoader.classList.add("hidden");
@@ -154,15 +139,7 @@
       bigPicture.classList.add("hidden");
       document.querySelector("body").classList.remove("modal-open");
     }
-  };
-
-  // var renderPhotos = function () {
-  //   for (var i = 0; i < picturesArray.length; i++) {
-  //     renderPhoto(picturesArray[i]);
-  //   }
-  // };
-
-  // renderPhotos();
+  }
 
   var successHandler = function (newPhotos) {
 
@@ -186,13 +163,6 @@
   };
 
   window.backend.load(successHandler, errorHandler);
-
-  // var escSuccessTemplate = function (message) {
-  //   successButton.addEventListener("click", function () {
-  //     message.classList.add("hidden");
-  //     console.log("click");
-  //   });
-  // };
 
 
   var renderSuccessMessage = function (template) {
