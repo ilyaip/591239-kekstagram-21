@@ -84,36 +84,42 @@
       }
       if (photo.comments.length <= MAX_COMMENTS) {
         commentsLoader.classList.add("hidden");
+      } else {
+        commentsLoader.classList.remove("hidden");
       }
       commentsLoader.addEventListener("click", function () {
-        if (photo.comments.length > MAX_COMMENTS) {
-          if (photo.comments.length - MAX_COMMENTS > DEFAULT_COMMENTS) {
-            MAX_COMMENTS += 5;
-            console.log(MAX_COMMENTS, "big");
-            commentsView.textContent = `${MAX_COMMENTS} из ${photo.comments.length} комментариев`;
-            for (let i = (MAX_COMMENTS - DEFAULT_COMMENTS); i < MAX_COMMENTS; i++) {
-              createCommentsNew(photo.comments[i]);
-            }
-          } else {
-            console.log(MAX_COMMENTS, "small");
-            commentsView.textContent = `${photo.comments.length} из ${photo.comments.length} комментариев`;
-            for (let i = MAX_COMMENTS; i < photo.comments.length; i++) {
-              createCommentsNew(photo.comments[i]);
-            }
-            commentsLoader.classList.add("hidden");
-          }
-        } else {
-          commentsLoader.classList.add("hidden");
-        }
+        renderFiveComments(photo);
       });
       closeBigPhoto.addEventListener("click", function () {
         closePhoto();
-        DEFAULT_COMMENTS = 5;
         MAX_COMMENTS = 5;
         commentsLoader.classList.remove("hidden");
+        // commentsLoader.removeEventListener("click", renderFiveComments);
       });
     });
   };
+
+  function renderFiveComments(commentsArray) {
+    if (commentsArray.comments.length > MAX_COMMENTS) {
+      if (commentsArray.comments.length - MAX_COMMENTS > DEFAULT_COMMENTS) {
+        MAX_COMMENTS += 5;
+        console.log(MAX_COMMENTS, "big");
+        commentsView.textContent = `${MAX_COMMENTS} из ${commentsArray.comments.length} комментариев`;
+        for (let i = (MAX_COMMENTS - DEFAULT_COMMENTS); i < MAX_COMMENTS; i++) {
+          createCommentsNew(commentsArray.comments[i]);
+        }
+      } else {
+        console.log(MAX_COMMENTS, "small");
+        commentsView.textContent = `${commentsArray.comments.length} из ${commentsArray.comments.length} комментариев`;
+        for (let i = MAX_COMMENTS; i < commentsArray.comments.length; i++) {
+          createCommentsNew(commentsArray.comments[i]);
+        }
+        commentsLoader.classList.add("hidden");
+      }
+    } else {
+      commentsLoader.classList.add("hidden");
+    }
+  }
 
   bigPhotoDiv.addEventListener("click", function () {
     openBigPhoto();
@@ -138,6 +144,7 @@
       evt.preventDefault();
       bigPicture.classList.add("hidden");
       document.querySelector("body").classList.remove("modal-open");
+      MAX_COMMENTS = 5;
     }
   }
 
