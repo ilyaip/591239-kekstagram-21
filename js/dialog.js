@@ -14,7 +14,8 @@
   window.dialog = {
     controlSmaller,
     controlBigger,
-    controlValue
+    controlValue,
+    editingForm
   };
 
   // Открытие и закрытие формы редактирования фото

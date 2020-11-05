@@ -12,8 +12,6 @@
   var comments = [];
   var COMMENT_NAME = ["Anton", "Max", "Kantimir", "Marusya", "Toma", "Joshua"];
   var COMMENT_DESCRIPTION = ["Всё отлично!", "В целом всё неплохо. Но не всё.", "Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.", "Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.", "Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.", "Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!"];
-  var pictureTemplate = document.querySelector("#picture").content.querySelector(".picture");
-  var pictureList = document.querySelector(".pictures");
 
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -43,23 +41,5 @@
   };
 
   createPictureArray();
-
-  var renderPhoto = function (photo) {
-    var picturElement = pictureTemplate.cloneNode(true);
-
-    picturElement.querySelector(".picture__img").src = photo.url;
-    picturElement.querySelector(".picture__likes").textContent = photo.like;
-    picturElement.querySelector(".picture__comments").textContent = photo.commentsNumber;
-
-    pictureList.appendChild(picturElement);
-  };
-
-  var renderPhotos = function () {
-    for (var i = 0; i < picturesArray.length; i++) {
-      renderPhoto(picturesArray[i]);
-    }
-  };
-
-  renderPhotos();
 
 })();
