@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var MAX_COMMENTS = 5;
+  var DEFAULT_COMMENTS = 5;
   var editingForm = document.querySelector(".img-upload__overlay");
   var form = document.querySelector(".img-upload__form");
   var uploadImg = document.querySelector(".img-upload__preview");
@@ -15,8 +17,6 @@
   var bigPhoto = bigPhotoDiv.querySelector("img");
   var picLikes = document.querySelector(".likes-count");
   var commentList = document.querySelector(".social__comments");
-  var MAX_COMMENTS = 5;
-  var DEFAULT_COMMENTS = 5;
   var bigPhotoDescription = document.querySelector(".social__caption");
   var commentsLoader = document.querySelector(".comments-loader");
   var commentsNumberNew = document.querySelector(".comments-count");
@@ -89,7 +89,9 @@
         commentsLoader.classList.remove("hidden");
       }
 
-      handler = () => renderFiveComments(photo);
+      handler = function () {
+        renderFiveComments(photo);
+      };
       commentsLoader.addEventListener("click", handler);
       closeBigPhoto.addEventListener("click", function () {
         closePhoto();
@@ -148,13 +150,14 @@
     }
   }
 
-  var successHandler = function (newPhotos) {
+  // var successHandler = function (newPhotos) {
 
-    for (var i = 0; i < newPhotos.length; i++) {
-      renderPhoto(newPhotos[i]);
-    }
+  //   // for (var i = 0; i < newPhotos.length; i++) {
+  //   //   renderPhoto(newPhotos[i]);
+  //   // }
+  //   console.log("it's ok");
 
-  };
+  // };
 
   var errorHandler = function (errorMessage) {
     var node = document.createElement('div');
@@ -169,7 +172,12 @@
 
   };
 
-  window.backend.load(successHandler, errorHandler);
+  // window.backend.load(successHandler, errorHandler);
+
+  window.rendercomments = {
+    errorHandler,
+    renderPhoto
+  };
 
 
   var renderSuccessMessage = function (template) {
