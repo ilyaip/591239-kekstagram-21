@@ -1,22 +1,20 @@
 'use strict';
 
 (function () {
+  var MAX_COMMENTS = 5;
+  var DEFAULT_COMMENTS = 5;
   var editingForm = document.querySelector(".img-upload__overlay");
   var form = document.querySelector(".img-upload__form");
   var uploadImg = document.querySelector(".img-upload__preview");
-  var effectNone = document.querySelector("#effect-none");
   var pictureTemplate = document.querySelector("#picture").content.querySelector(".picture");
   var pictureList = document.querySelector(".pictures");
   var successTemplate = document.querySelector("#success").content.querySelector(".success");
   var main = document.querySelector("main");
-  var successButton = document.querySelector("#success").content.querySelector(".success__button");
   var errorTemplate = document.querySelector("#error").content.querySelector(".error");
   var bigPhotoDiv = document.querySelector(".big-picture__img");
   var bigPhoto = bigPhotoDiv.querySelector("img");
   var picLikes = document.querySelector(".likes-count");
   var commentList = document.querySelector(".social__comments");
-  var MAX_COMMENTS = 5;
-  var DEFAULT_COMMENTS = 5;
   var bigPhotoDescription = document.querySelector(".social__caption");
   var commentsLoader = document.querySelector(".comments-loader");
   var commentsNumberNew = document.querySelector(".comments-count");
@@ -75,12 +73,12 @@
       openBigPhoto();
       createPhoto(photo);
       if (photo.comments.length < MAX_COMMENTS) {
-        for (let i = 0; i < photo.comments.length; i++) {
+        for (var i = 0; i < photo.comments.length; i++) {
           createCommentsNew(photo.comments[i]);
         }
       } else {
-        for (let i = 0; i < MAX_COMMENTS; i++) {
-          createCommentsNew(photo.comments[i]);
+        for (var j = 0; j < MAX_COMMENTS; j++) {
+          createCommentsNew(photo.comments[j]);
         }
       }
       if (photo.comments.length <= MAX_COMMENTS) {
@@ -89,7 +87,9 @@
         commentsLoader.classList.remove("hidden");
       }
 
-      handler = () => renderFiveComments(photo);
+      handler = function () {
+        renderFiveComments(photo);
+      };
       commentsLoader.addEventListener("click", handler);
       closeBigPhoto.addEventListener("click", function () {
         closePhoto();
@@ -105,13 +105,13 @@
       if (pictureArray.comments.length - MAX_COMMENTS > DEFAULT_COMMENTS) {
         MAX_COMMENTS += 5;
         commentsView.textContent = `${MAX_COMMENTS} из ${pictureArray.comments.length} комментариев`;
-        for (let i = (MAX_COMMENTS - DEFAULT_COMMENTS); i < MAX_COMMENTS; i++) {
+        for (var i = (MAX_COMMENTS - DEFAULT_COMMENTS); i < MAX_COMMENTS; i++) {
           createCommentsNew(pictureArray.comments[i]);
         }
       } else {
         commentsView.textContent = `${pictureArray.comments.length} из ${pictureArray.comments.length} комментариев`;
-        for (let i = MAX_COMMENTS; i < pictureArray.comments.length; i++) {
-          createCommentsNew(pictureArray.comments[i]);
+        for (var j = MAX_COMMENTS; j < pictureArray.comments.length; j++) {
+          createCommentsNew(pictureArray.comments[j]);
         }
         commentsLoader.classList.add("hidden");
       }
@@ -148,14 +148,6 @@
     }
   }
 
-  var successHandler = function (newPhotos) {
-
-    for (var i = 0; i < newPhotos.length; i++) {
-      renderPhoto(newPhotos[i]);
-    }
-
-  };
-
   var errorHandler = function (errorMessage) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
@@ -169,7 +161,10 @@
 
   };
 
-  window.backend.load(successHandler, errorHandler);
+  window.rendercomments = {
+    errorHandler,
+    renderPhoto
+  };
 
 
   var renderSuccessMessage = function (template) {
@@ -185,7 +180,6 @@
       var isClickInsideModal = window.contains(evt.target);
       if (!isClickInsideModal) {
         message.classList.add("hidden");
-        console.log("Нажатие вне формы");
       }
     });
 
@@ -213,10 +207,8 @@
   form.addEventListener("submit", submitHandler);
 
   var bigPicture = document.querySelector(".big-picture");
-  var picture = document.querySelector(".picture");
 
   pictureTemplate.addEventListener("click", function () {
     bigPicture.classList.remove("hidden");
-    console.log("click!");
   });
 })();

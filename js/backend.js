@@ -43,6 +43,6 @@
 
   window.backend = {
     upload: upload,
-    load: load
+    load: load,
   };
 })();

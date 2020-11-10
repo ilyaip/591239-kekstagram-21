@@ -35,7 +35,7 @@
   };
 
   var onPopupEscPress = function (evt) {
-    if ((inputHashtags != document.activeElement) && (evt.key === 'Escape')) {
+    if ((inputHashtags !== document.activeElement) && (evt.key === 'Escape')) {
       evt.preventDefault();
       editingForm.classList.add("hidden");
       body.classList.remove("modal-open");
