@@ -10,7 +10,7 @@
   window.dialog.controlValue.value = MAX_ZOOM + "%";
 
   var increaseZoom = function () {
-    var oldValue = Number.parseInt(window.dialog.controlValue.value);
+    var oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
     var newValue = oldValue + STEP;
     var result = newValue >= MAX_ZOOM ? MAX_ZOOM : newValue;
     window.dialog.controlValue.value = result + "%";
@@ -18,7 +18,7 @@
   };
 
   var decreaseZoom = function () {
-    var oldValue = Number.parseInt(window.dialog.controlValue.value);
+    var oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
     var newValue = oldValue - STEP;
     var result = newValue <= MIN_ZOOM ? MIN_ZOOM : newValue;
     window.dialog.controlValue.value = result + "%";
@@ -88,7 +88,6 @@
   };
 
   var currentEffect;
-  var pinValue;
   var sliderDefaultValue = {
     left: "450px",
     width: "100%"
@@ -100,7 +99,6 @@
     if (evt.target && evt.target.matches('input[type="radio"]')) {
       uploadImg.style.filter = FILTERS[evt.target.value].DEFAULT;
     }
-    pinValue = effectLevelDepth.offsetWidth;
     currentEffect = evt.target.value;
     pinSlider.style.left = sliderDefaultValue.left;
     effectLevelDepth.style.width = sliderDefaultValue.width;
@@ -165,9 +163,7 @@
       }
 
       getValueSaturation(newX);
-      console.log(newX);
-      pinSliderValue.value = Number.parseInt(effectLevelDepth.style.width);
-
+      pinSliderValue.value = Number.parseInt(effectLevelDepth.style.width, 10);
     };
 
     var onMouseUp = function (upEvt) {

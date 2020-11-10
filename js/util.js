@@ -2,8 +2,8 @@
 
 (function () {
 
-  const getRandomElement = function (array) {
-    const randomElementIndex = Math.floor(Math.random() * array.length);
+  var getRandomElement = function (array) {
+    var randomElementIndex = Math.floor(Math.random() * array.length);
     return array[randomElementIndex];
   };
 

@@ -1,17 +1,17 @@
 'use strict';
 
 (function () {
-  let imgFilters = document.querySelector(".img-filters");
-  let filterDefault = document.querySelector("#filter-default");
-  let filterRandom = document.querySelector("#filter-random");
-  let filterDiscussed = document.querySelector("#filter-discussed");
-  let RANDOM_COMMENTS = 10;
+  var imgFilters = document.querySelector(".img-filters");
+  var filterDefault = document.querySelector("#filter-default");
+  var filterRandom = document.querySelector("#filter-random");
+  var filterDiscussed = document.querySelector("#filter-discussed");
+  var RANDOM_COMMENTS = 10;
 
-  let pictureArray = [];
+  var pictureArray = [];
 
   function cleanPictures() {
-    let pictures = document.querySelectorAll(".picture");
-    for (let i = 0; i < pictures.length; i++) {
+    var pictures = document.querySelectorAll(".picture");
+    for (var i = 0; i < pictures.length; i++) {
       pictures[i].remove();
     }
   }
@@ -42,9 +42,13 @@
   filterRandom.addEventListener("click", function () {
     cleanPictures();
     cleanActiveButton();
+    var discussedArray = [];
+    discussedArray = discussedArray.concat(pictureArray);
     window.debounce(function () {
       for (var i = 0; i < RANDOM_COMMENTS; i++) {
-        window.rendercomments.renderPhoto(window.utils.getRandomElement(pictureArray));
+        const randomElementIndex = Math.floor(Math.random() * discussedArray.length);
+        window.rendercomments.renderPhoto(discussedArray[randomElementIndex]);
+        discussedArray.splice(randomElementIndex, 1);
       }
     }
     );
@@ -54,7 +58,7 @@
   filterDiscussed.addEventListener("click", function () {
     cleanPictures();
     cleanActiveButton();
-    let discussedArray = [];
+    var discussedArray = [];
     discussedArray = discussedArray.concat(pictureArray);
     discussedArray.sort(function (left, right) {
       return right.comments.length - left.comments.length;
@@ -67,9 +71,8 @@
     filterDiscussed.classList.add("img-filters__button--active");
   });
 
-  const successHandler = function (data) {
+  var successHandler = function (data) {
     pictureArray = data;
-    console.log(pictureArray);
     imgFilters.classList.remove("img-filters--inactive");
     updateFilter(pictureArray);
   };
