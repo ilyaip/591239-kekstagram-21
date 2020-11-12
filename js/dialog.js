@@ -1,13 +1,15 @@
 'use strict';
 
 var inputUploadFile = document.querySelector("#upload-file");
+var uploadImg = document.querySelector(".img-upload__preview");
+var previewFile = uploadImg.querySelector("img");
+var effectPreview = document.querySelectorAll(".effects__preview");
 var editingForm = document.querySelector(".img-upload__overlay");
 var body = document.querySelector("body");
 var closeEditingForm = document.querySelector("#upload-cancel");
 var controlSmaller = document.querySelector(".scale__control--smaller");
 var controlBigger = document.querySelector(".scale__control--bigger");
 var controlValue = document.querySelector(".scale__control--value");
-var uploadImg = document.querySelector(".img-upload__preview");
 var inputHashtags = document.querySelector(".text__hashtags");
 var inputComment = document.querySelector(".text__description");
 
@@ -64,3 +66,28 @@ closeEditingForm.addEventListener("click", function () {
   cleanFilters();
 });
 
+// Выбор загружаемой фотографии
+
+var FILE_TYPES = ["gif", "jpg", "jpeg", "png"];
+
+inputUploadFile.addEventListener("change", function () {
+  var file = inputUploadFile.files[0];
+  var fileName = file.name.toLowerCase();
+
+  var matches = FILE_TYPES.some(function (ending) {
+    return fileName.endsWith(ending);
+  });
+
+  if (matches) {
+    var reader = new FileReader();
+
+    reader.addEventListener("load", function () {
+      previewFile.src = reader.result;
+      for (var i = 0; i < effectPreview.length; i++) {
+        effectPreview[i].style.backgroundImage = `url("${reader.result}")`;
+      }
+    });
+
+    reader.readAsDataURL(file);
+  }
+});
