@@ -174,23 +174,28 @@ var renderSuccessMessage = function (template) {
     message.classList.add("hidden");
   });
 
-  document.addEventListener("click", function (evt) {
+  function clickInsideModal(evt) {
     var window = message.querySelector("div");
     var isClickInsideModal = window.contains(evt.target);
     if (!isClickInsideModal) {
       message.classList.add("hidden");
     }
-  });
-
-  document.addEventListener("keydown", handlerPopupEscPress(message));
-};
-
-var handlerPopupEscPress = function (evt, item) {
-  if (evt.key === 'Escape') {
-    evt.preventDefault();
-    item.classList.add("hidden");
+    document.removeEventListener("click", clickInsideModal);
   }
+
+  document.addEventListener("click", clickInsideModal);
+
+  var handlerPopupEscPress = function (evt) {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      message.classList.add("hidden");
+      document.removeEventListener("keydown", handlerPopupEscPress);
+    }
+  };
+
+  document.addEventListener("keydown", handlerPopupEscPress);
 };
+
 
 var onSubmit = function () {
   editingForm.classList.add("hidden");
