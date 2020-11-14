@@ -1,6 +1,6 @@
 'use strict';
 
-var StatusCode = {
+var statusCode = {
   OK: 200
 };
 var TIMEOUT_IN_MS = 10000;
@@ -26,7 +26,7 @@ function handlerLoad(onSuccess, onError, request) {
   request.timeout = TIMEOUT_IN_MS;
 
   request.addEventListener("load", function () {
-    if (request.status === StatusCode.OK) {
+    if (request.status === statusCode.OK) {
       onSuccess(request.response);
     } else {
       onError("Статус ответа: " + request.status + " " + request.statusText);

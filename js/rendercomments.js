@@ -179,8 +179,8 @@ var renderSuccessMessage = function (template) {
     var isClickInsideModal = window.contains(evt.target);
     if (!isClickInsideModal) {
       message.classList.add("hidden");
+      document.removeEventListener("click", clickInsideModal);
     }
-    document.removeEventListener("click", clickInsideModal);
   }
 
   document.addEventListener("click", clickInsideModal);
@@ -203,8 +203,12 @@ var onSubmit = function () {
   uploadImg.style.filter = "none";
 };
 
+var handlerErrorMessage = function () {
+  renderSuccessMessage(errorTemplate);
+};
+
 var submitHandler = function (evt) {
-  window.backend.upload(new FormData(form), onSubmit, renderSuccessMessage(errorTemplate));
+  window.backend.upload(new FormData(form), onSubmit, handlerErrorMessage);
   evt.preventDefault();
 };
 

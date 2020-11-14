@@ -7,6 +7,7 @@ var inputComment = document.querySelector(".text__description");
 var MIN_HASHTAG_LENGTH = 2;
 var MAX_HASHTAG_LENGTH = 20;
 var MAX_HASHTAGS = 5;
+var MAX_COMMENTS_LENGTH = 140;
 var checkHashtags = /^#[a-zа-я0-9]{1,20}$/;
 
 inputHashtags.addEventListener('input', function () {
@@ -34,7 +35,7 @@ inputHashtags.addEventListener('input', function () {
 });
 
 inputComment.addEventListener("input", function () {
-  if (inputComment.value.length > 140) {
+  if (inputComment.value.length > MAX_COMMENTS_LENGTH) {
     inputComment.setCustomValidity("Максимум 140 символов");
   } else {
     inputComment.setCustomValidity('');
