@@ -36,6 +36,10 @@ var closeForm = function () {
   document.removeEventListener("keydown", onPopupEscPress);
 };
 
+var cleanInput = function () {
+  inputUploadFile.value = "";
+};
+
 var onPopupEscPress = function (evt) {
   if ((inputHashtags !== document.activeElement) && (inputComment !== document.activeElement) && (evt.key === 'Escape')) {
     evt.preventDefault();
@@ -43,11 +47,8 @@ var onPopupEscPress = function (evt) {
     body.classList.remove("modal-open");
     inputComment.value = "";
     inputHashtags.value = "";
+    cleanInput();
   }
-};
-
-var cleanInput = function () {
-  inputUploadFile.value = "";
 };
 
 inputUploadFile.addEventListener("change", function () {
