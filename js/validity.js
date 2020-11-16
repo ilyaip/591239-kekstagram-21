@@ -2,12 +2,12 @@
 
 // Валидация хэш-тегов
 
-var inputHashtags = document.querySelector(".text__hashtags");
-var inputComment = document.querySelector(".text__description");
 var MIN_HASHTAG_LENGTH = 2;
 var MAX_HASHTAG_LENGTH = 20;
 var MAX_HASHTAGS = 5;
 var MAX_COMMENTS_LENGTH = 140;
+var inputHashtags = document.querySelector(".text__hashtags");
+var inputComment = document.querySelector(".text__description");
 var checkHashtags = /^#[a-zа-я0-9]{1,20}$/;
 
 inputHashtags.addEventListener('input', function () {

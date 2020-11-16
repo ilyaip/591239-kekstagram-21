@@ -5,42 +5,6 @@
 var MAX_ZOOM = 100;
 var MIN_ZOOM = 25;
 var STEP = 25;
-
-window.dialog.controlValue.value = MAX_ZOOM + "%";
-
-var increaseZoom = function () {
-  var oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
-  var newValue = oldValue + STEP;
-  var result = newValue >= MAX_ZOOM ? MAX_ZOOM : newValue;
-  window.dialog.controlValue.value = result + "%";
-  uploadImg.style.transform = `scale(${result / 100})`;
-};
-
-var decreaseZoom = function () {
-  var oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
-  var newValue = oldValue - STEP;
-  var result = newValue <= MIN_ZOOM ? MIN_ZOOM : newValue;
-  window.dialog.controlValue.value = result + "%";
-  uploadImg.style.transform = `scale(${result / 100})`;
-};
-
-window.dialog.controlBigger.addEventListener("click", function () {
-  increaseZoom();
-});
-
-window.dialog.controlSmaller.addEventListener("click", function () {
-  decreaseZoom();
-});
-
-var pinSlider = document.querySelector(".effect-level__pin");
-var pinField = document.querySelector(".effect-level");
-var pinSliderValue = document.querySelector(".effect-level__value");
-var uploadForm = document.querySelector(".img-upload__form");
-var effectNone = document.querySelector("#effect-none");
-var effectLevelDepth = document.querySelector(".effect-level__depth");
-var uploadImg = document.querySelector(".img-upload__preview");
-var sliderWidth = document.querySelector(".effect-level__line");
-
 var FILTERS = {
   chrome: {
     DEFAULT: "grayscale(1)",
@@ -85,6 +49,41 @@ var EFFECTS = {
   HEAT: "heat",
   NONE: "none"
 };
+
+window.dialog.controlValue.value = MAX_ZOOM + "%";
+
+var increaseZoom = function () {
+  var oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
+  var newValue = oldValue + STEP;
+  var result = newValue >= MAX_ZOOM ? MAX_ZOOM : newValue;
+  window.dialog.controlValue.value = result + "%";
+  uploadImg.style.transform = `scale(${result / 100})`;
+};
+
+var decreaseZoom = function () {
+  var oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
+  var newValue = oldValue - STEP;
+  var result = newValue <= MIN_ZOOM ? MIN_ZOOM : newValue;
+  window.dialog.controlValue.value = result + "%";
+  uploadImg.style.transform = `scale(${result / 100})`;
+};
+
+window.dialog.controlBigger.addEventListener("click", function () {
+  increaseZoom();
+});
+
+window.dialog.controlSmaller.addEventListener("click", function () {
+  decreaseZoom();
+});
+
+var pinSlider = document.querySelector(".effect-level__pin");
+var pinField = document.querySelector(".effect-level");
+var pinSliderValue = document.querySelector(".effect-level__value");
+var uploadForm = document.querySelector(".img-upload__form");
+var effectNone = document.querySelector("#effect-none");
+var effectLevelDepth = document.querySelector(".effect-level__depth");
+var uploadImg = document.querySelector(".img-upload__preview");
+var sliderWidth = document.querySelector(".effect-level__line");
 
 var currentEffect;
 var sliderDefaultValue = {
@@ -147,7 +146,7 @@ pinSlider.addEventListener("mousedown", function (evt) {
 
   var dragged = false;
 
-  var onMouseMove = function (moveEvt) {
+  var handlerMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
 
     dragged = true;
@@ -165,23 +164,23 @@ pinSlider.addEventListener("mousedown", function (evt) {
     pinSliderValue.value = Number.parseInt(effectLevelDepth.style.width, 10);
   };
 
-  var onMouseUp = function (upEvt) {
+  var handlerMouseUp = function (upEvt) {
     upEvt.preventDefault();
 
-    document.removeEventListener("mousemove", onMouseMove);
-    document.removeEventListener("mouseup", onMouseUp);
+    document.removeEventListener("mousemove", handlerMouseMove);
+    document.removeEventListener("mouseup", handlerMouseUp);
 
     if (dragged) {
-      var onClickPreventDefault = function (clickEvt) {
+      var handlerClickPreventDefault = function (clickEvt) {
         clickEvt.preventDefault();
-        pinSlider.removeEventListener('click', onClickPreventDefault);
+        pinSlider.removeEventListener('click', handlerClickPreventDefault);
       };
-      pinSlider.addEventListener('click', onClickPreventDefault);
+      pinSlider.addEventListener('click', handlerClickPreventDefault);
     }
   };
 
 
-  document.addEventListener("mousemove", onMouseMove);
-  document.addEventListener("mouseup", onMouseUp);
+  document.addEventListener("mousemove", handlerMouseMove);
+  document.addEventListener("mouseup", handlerMouseUp);
 });
 

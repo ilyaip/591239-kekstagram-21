@@ -6,5 +6,5 @@ var getRandomElement = function (array) {
 };
 
 window.utils = {
-  getRandomElement: getRandomElement
+  getRandomElement
 };

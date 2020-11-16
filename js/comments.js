@@ -2,6 +2,7 @@
 
 var MAX_COMMENTS = 5;
 var DEFAULT_COMMENTS = 5;
+var ESC_KEY = "Escape";
 var editingForm = document.querySelector(".img-upload__overlay");
 var form = document.querySelector(".img-upload__form");
 var uploadImg = document.querySelector(".img-upload__preview");
@@ -38,7 +39,7 @@ function createCommentsNew(array) {
     item.remove();
   });
   document.addEventListener("keydown", function (evt) {
-    if (evt.key === 'Escape') {
+    if (evt.key === ESC_KEY) {
       evt.preventDefault();
       item.remove();
     }
@@ -72,9 +73,9 @@ var renderPhoto = function (photo) {
     openBigPhoto();
     createPhoto(photo);
     if (photo.comments.length < MAX_COMMENTS) {
-      for (var i = 0; i < photo.comments.length; i++) {
-        createCommentsNew(photo.comments[i]);
-      }
+      photo.comments.forEach(function (item) {
+        createCommentsNew(item);
+      });
     } else {
       for (var j = 0; j < MAX_COMMENTS; j++) {
         createCommentsNew(photo.comments[j]);
@@ -138,7 +139,7 @@ function openBigPhoto() {
 }
 
 function handlerPopupEscPhoto(evt) {
-  if (evt.key === 'Escape') {
+  if (evt.key === ESC_KEY) {
     evt.preventDefault();
     bigPicture.classList.add("hidden");
     document.querySelector("body").classList.remove("modal-open");
@@ -160,12 +161,6 @@ var errorHandler = function (errorMessage) {
 
 };
 
-window.rendercomments = {
-  errorHandler,
-  renderPhoto
-};
-
-
 var renderSuccessMessage = function (template) {
   var message = template.cloneNode(true);
   main.appendChild(message);
@@ -186,7 +181,7 @@ var renderSuccessMessage = function (template) {
   document.addEventListener("click", clickInsideModal);
 
   var handlerPopupEscPress = function (evt) {
-    if (evt.key === 'Escape') {
+    if (evt.key === ESC_KEY) {
       evt.preventDefault();
       message.classList.add("hidden");
       document.removeEventListener("keydown", handlerPopupEscPress);
@@ -197,7 +192,7 @@ var renderSuccessMessage = function (template) {
 };
 
 
-var onSubmit = function () {
+var handlerSubmit = function () {
   editingForm.classList.add("hidden");
   renderSuccessMessage(successTemplate);
   uploadImg.style.filter = "none";
@@ -208,7 +203,7 @@ var handlerErrorMessage = function () {
 };
 
 var submitHandler = function (evt) {
-  window.backend.upload(new FormData(form), onSubmit, handlerErrorMessage);
+  window.backend.upload(new FormData(form), handlerSubmit, handlerErrorMessage);
   evt.preventDefault();
 };
 
@@ -219,3 +214,9 @@ var bigPicture = document.querySelector(".big-picture");
 pictureTemplate.addEventListener("click", function () {
   bigPicture.classList.remove("hidden");
 });
+
+window.comments = {
+  errorHandler,
+  renderPhoto,
+  renderSuccessMessage
+};
