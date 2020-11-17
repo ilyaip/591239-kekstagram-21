@@ -2,10 +2,10 @@
 
 // Наложение эффекта и его насыщенности на изображение, изменение масштаба
 
-var MAX_ZOOM = 100;
-var MIN_ZOOM = 25;
-var STEP = 25;
-var FILTERS = {
+const MAX_ZOOM = 100;
+const MIN_ZOOM = 25;
+const STEP = 25;
+const Filters = {
   chrome: {
     DEFAULT: "grayscale(1)",
     MIN_VALUE: "0",
@@ -41,7 +41,7 @@ var FILTERS = {
   },
 };
 
-var EFFECTS = {
+const Effects = {
   CHROME: "chrome",
   SEPIA: "sepia",
   MARVIN: "marvin",
@@ -52,21 +52,21 @@ var EFFECTS = {
 
 window.dialog.controlValue.value = MAX_ZOOM + "%";
 
-var increaseZoom = function () {
-  var oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
-  var newValue = oldValue + STEP;
-  var result = newValue >= MAX_ZOOM ? MAX_ZOOM : newValue;
+function increaseZoom() {
+  let oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
+  let newValue = oldValue + STEP;
+  let result = newValue >= MAX_ZOOM ? MAX_ZOOM : newValue;
   window.dialog.controlValue.value = result + "%";
   uploadImg.style.transform = `scale(${result / 100})`;
-};
+}
 
-var decreaseZoom = function () {
-  var oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
-  var newValue = oldValue - STEP;
-  var result = newValue <= MIN_ZOOM ? MIN_ZOOM : newValue;
+function decreaseZoom() {
+  let oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
+  let newValue = oldValue - STEP;
+  let result = newValue <= MIN_ZOOM ? MIN_ZOOM : newValue;
   window.dialog.controlValue.value = result + "%";
   uploadImg.style.transform = `scale(${result / 100})`;
-};
+}
 
 window.dialog.controlBigger.addEventListener("click", function () {
   increaseZoom();
@@ -76,31 +76,31 @@ window.dialog.controlSmaller.addEventListener("click", function () {
   decreaseZoom();
 });
 
-var pinSlider = document.querySelector(".effect-level__pin");
-var pinField = document.querySelector(".effect-level");
-var pinSliderValue = document.querySelector(".effect-level__value");
-var uploadForm = document.querySelector(".img-upload__form");
-var effectNone = document.querySelector("#effect-none");
-var effectLevelDepth = document.querySelector(".effect-level__depth");
-var uploadImg = document.querySelector(".img-upload__preview");
-var sliderWidth = document.querySelector(".effect-level__line");
+const pinSlider = document.querySelector(".effect-level__pin");
+const pinField = document.querySelector(".effect-level");
+const pinSliderValue = document.querySelector(".effect-level__value");
+const uploadForm = document.querySelector(".img-upload__form");
+const effectNone = document.querySelector("#effect-none");
+const effectLevelDepth = document.querySelector(".effect-level__depth");
+const uploadImg = document.querySelector(".img-upload__preview");
+const sliderWidth = document.querySelector(".effect-level__line");
 
-var currentEffect;
-var sliderDefaultValue = {
+let currentEffect;
+let sliderDefaultValue = {
   left: "450px",
   width: "100%"
 };
 
 uploadForm.addEventListener("change", checkedInput);
 
-var filterChange = function (evt) {
+function filterChange(evt) {
   if (evt.target && evt.target.matches('input[type="radio"]')) {
-    uploadImg.style.filter = FILTERS[evt.target.value].DEFAULT;
+    uploadImg.style.filter = Filters[evt.target.value].DEFAULT;
   }
   currentEffect = evt.target.value;
   pinSlider.style.left = sliderDefaultValue.left;
   effectLevelDepth.style.width = sliderDefaultValue.width;
-};
+}
 
 uploadForm.addEventListener("change", filterChange);
 
@@ -113,27 +113,27 @@ function checkedInput() {
 }
 
 function getSaturation(value) {
-  return Math.round(((FILTERS[currentEffect].MAX_VALUE - FILTERS[currentEffect].MIN_VALUE) * (value / sliderWidth.offsetWidth) + FILTERS[currentEffect].MIN_VALUE) * 100) / 100;
+  return Math.round(((Filters[currentEffect].MAX_VALUE - Filters[currentEffect].MIN_VALUE) * (value / sliderWidth.offsetWidth) + Filters[currentEffect].MIN_VALUE) * 100) / 100;
 }
 
 function getValueSaturation(value) {
   switch (currentEffect) {
-    case EFFECTS.CHROME:
-      uploadImg.style.filter = `grayscale(${getSaturation(value) + FILTERS[currentEffect].UNIT})`;
+    case Effects.CHROME:
+      uploadImg.style.filter = `grayscale(${getSaturation(value) + Filters[currentEffect].UNIT})`;
       break;
-    case EFFECTS.SEPIA:
-      uploadImg.style.filter = `sepia(${getSaturation(value) + FILTERS[currentEffect].UNIT})`;
+    case Effects.SEPIA:
+      uploadImg.style.filter = `sepia(${getSaturation(value) + Filters[currentEffect].UNIT})`;
       break;
-    case EFFECTS.MARVIN:
-      uploadImg.style.filter = `invert(${getSaturation(value) + FILTERS[currentEffect].UNIT})`;
+    case Effects.MARVIN:
+      uploadImg.style.filter = `invert(${getSaturation(value) + Filters[currentEffect].UNIT})`;
       break;
-    case EFFECTS.PHOBOS:
-      uploadImg.style.filter = `blur(${getSaturation(value) + FILTERS[currentEffect].UNIT})`;
+    case Effects.PHOBOS:
+      uploadImg.style.filter = `blur(${getSaturation(value) + Filters[currentEffect].UNIT})`;
       break;
-    case EFFECTS.HEAT:
-      uploadImg.style.filter = `brightness(${getSaturation(value) + FILTERS[currentEffect].UNIT})`;
+    case Effects.HEAT:
+      uploadImg.style.filter = `brightness(${getSaturation(value) + Filters[currentEffect].UNIT})`;
       break;
-    case EFFECTS.NONE:
+    case Effects.NONE:
       uploadImg.style.filter = "none";
       break;
   }
@@ -142,18 +142,18 @@ function getValueSaturation(value) {
 pinSlider.addEventListener("mousedown", function (evt) {
   evt.preventDefault();
 
-  var startX = evt.clientX;
+  let startX = evt.clientX;
 
-  var dragged = false;
+  let dragged = false;
 
-  var handlerMouseMove = function (moveEvt) {
+  function onMouseMove(moveEvt) {
     moveEvt.preventDefault();
 
     dragged = true;
 
-    var shift = startX - moveEvt.clientX;
+    let shift = startX - moveEvt.clientX;
     startX = moveEvt.clientX;
-    var newX = pinSlider.offsetLeft - shift;
+    let newX = pinSlider.offsetLeft - shift;
 
     if (newX > 0 && newX < sliderWidth.offsetWidth) {
       pinSlider.style.left = newX + "px";
@@ -162,25 +162,25 @@ pinSlider.addEventListener("mousedown", function (evt) {
 
     getValueSaturation(newX);
     pinSliderValue.value = Number.parseInt(effectLevelDepth.style.width, 10);
-  };
+  }
 
-  var handlerMouseUp = function (upEvt) {
+  function onMouseUp(upEvt) {
     upEvt.preventDefault();
 
-    document.removeEventListener("mousemove", handlerMouseMove);
-    document.removeEventListener("mouseup", handlerMouseUp);
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
 
     if (dragged) {
-      var handlerClickPreventDefault = function (clickEvt) {
+      let onClickPreventDefault = function (clickEvt) {
         clickEvt.preventDefault();
-        pinSlider.removeEventListener('click', handlerClickPreventDefault);
+        pinSlider.removeEventListener('click', onClickPreventDefault);
       };
-      pinSlider.addEventListener('click', handlerClickPreventDefault);
+      pinSlider.addEventListener('click', onClickPreventDefault);
     }
-  };
+  }
 
 
-  document.addEventListener("mousemove", handlerMouseMove);
-  document.addEventListener("mouseup", handlerMouseUp);
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseup", onMouseUp);
 });
 

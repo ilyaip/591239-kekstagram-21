@@ -1,9 +1,9 @@
 'use strict';
 
-var getRandomElement = function (array) {
-  var randomElementIndex = Math.floor(Math.random() * array.length);
+function getRandomElement(array) {
+  let randomElementIndex = Math.floor(Math.random() * array.length);
   return array[randomElementIndex];
-};
+}
 
 window.utils = {
   getRandomElement

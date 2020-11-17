@@ -1,42 +1,42 @@
 'use strict';
 
-var ESC_KEY = "Escape";
-var FILE_TYPES = ["gif", "jpg", "jpeg", "png"];
-var inputUploadFile = document.querySelector("#upload-file");
-var uploadImg = document.querySelector(".img-upload__preview");
-var previewFile = uploadImg.querySelector("img");
-var effectPreview = document.querySelectorAll(".effects__preview");
-var editingForm = document.querySelector(".img-upload__overlay");
-var body = document.querySelector("body");
-var closeEditingForm = document.querySelector("#upload-cancel");
-var controlSmaller = document.querySelector(".scale__control--smaller");
-var controlBigger = document.querySelector(".scale__control--bigger");
-var controlValue = document.querySelector(".scale__control--value");
-var inputHashtags = document.querySelector(".text__hashtags");
-var inputComment = document.querySelector(".text__description");
-var errorTemplate = document.querySelector("#error").content.querySelector(".error");
+const ESC_KEY = "Escape";
+const FILE_TYPES = ["gif", "jpg", "jpeg", "png"];
+const inputUploadFile = document.querySelector("#upload-file");
+const uploadImg = document.querySelector(".img-upload__preview");
+const previewFile = uploadImg.querySelector("img");
+const effectPreview = document.querySelectorAll(".effects__preview");
+const editingForm = document.querySelector(".img-upload__overlay");
+const body = document.querySelector("body");
+const closeEditingForm = document.querySelector("#upload-cancel");
+const controlSmaller = document.querySelector(".scale__control--smaller");
+const controlBigger = document.querySelector(".scale__control--bigger");
+const controlValue = document.querySelector(".scale__control--value");
+const inputHashtags = document.querySelector(".text__hashtags");
+const inputComment = document.querySelector(".text__description");
+const errorTemplate = document.querySelector("#error").content.querySelector(".error");
 
 // Открытие и закрытие формы редактирования фото
 
-var openForm = function () {
+function openForm() {
   editingForm.classList.remove("hidden");
   body.classList.add("modal-open");
 
-  document.addEventListener("keydown", handlerPopupEscPress);
-};
+  document.addEventListener("keydown", onPopupEscPress);
+}
 
-var closeForm = function () {
+function closeForm() {
   editingForm.classList.add("hidden");
   body.classList.remove("modal-open");
 
-  document.removeEventListener("keydown", handlerPopupEscPress);
-};
+  document.removeEventListener("keydown", onPopupEscPress);
+}
 
-var cleanInput = function () {
+function cleanInput() {
   inputUploadFile.value = "";
-};
+}
 
-var handlerPopupEscPress = function (evt) {
+function onPopupEscPress(evt) {
   if ((inputHashtags !== document.activeElement) && (inputComment !== document.activeElement) && (evt.key === ESC_KEY)) {
     evt.preventDefault();
     editingForm.classList.add("hidden");
@@ -45,13 +45,7 @@ var handlerPopupEscPress = function (evt) {
     inputHashtags.value = "";
     cleanInput();
   }
-};
-
-// inputUploadFile.addEventListener("change", function () {
-//   openForm();
-//   controlValue.value = "100%";
-//   uploadImg.style.transform = "scale(1)";
-// });
+}
 
 function cleanFilters() {
   uploadImg.style.filter = "none";
@@ -66,15 +60,15 @@ closeEditingForm.addEventListener("click", function () {
 // Выбор загружаемой фотографии
 
 inputUploadFile.addEventListener("change", function () {
-  var file = inputUploadFile.files[0];
-  var fileName = file.name.toLowerCase();
+  const file = inputUploadFile.files[0];
+  const fileName = file.name.toLowerCase();
 
-  var matches = FILE_TYPES.some(function (ending) {
+  let matches = FILE_TYPES.some(function (ending) {
     return fileName.endsWith(ending);
   });
 
   if (matches) {
-    var reader = new FileReader();
+    const reader = new FileReader();
     openForm();
     controlValue.value = "100%";
     uploadImg.style.transform = "scale(1)";
@@ -97,5 +91,6 @@ window.dialog = {
   controlSmaller,
   controlBigger,
   controlValue,
-  editingForm
+  editingForm,
+  cleanInput
 };

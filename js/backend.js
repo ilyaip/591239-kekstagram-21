@@ -1,42 +1,43 @@
 'use strict';
 
-var statusCode = {
+const TIMEOUT_IN_MS = 10000;
+const URL_POST = "https://21.javascript.pages.academy/kekstagram";
+const URL_GET = "https://21.javascript.pages.academy/kekstagram/data";
+
+const StatusCode = {
   OK: 200
 };
-var TIMEOUT_IN_MS = 10000;
 
-var upload = function (data, handlerSuccess, handlerError) {
-  var xhr = new XMLHttpRequest();
-  var URL = "https://21.javascript.pages.academy/kekstagram";
-  handleLoad(handlerSuccess, handlerError, xhr);
-  xhr.open("POST", URL);
+function upload(data, onSuccess, onError) {
+  const xhr = new XMLHttpRequest();
+  handleLoad(onSuccess, onError, xhr);
+  xhr.open("POST", URL_POST);
   xhr.send(data);
-};
+}
 
-var load = function (handlerSuccess, handlerError) {
-  var xhr = new XMLHttpRequest();
-  var URL = "https://21.javascript.pages.academy/kekstagram/data";
-  handleLoad(handlerSuccess, handlerError, xhr);
-  xhr.open("GET", URL);
+function load(onSuccess, onError) {
+  const xhr = new XMLHttpRequest();
+  handleLoad(onSuccess, onError, xhr);
+  xhr.open("GET", URL_GET);
   xhr.send();
-};
+}
 
-function handleLoad(handlerSuccess, handlerError, request) {
+function handleLoad(onSuccess, onError, request) {
   request.responseType = "json";
   request.timeout = TIMEOUT_IN_MS;
 
   request.addEventListener("load", function () {
-    if (request.status === statusCode.OK) {
-      handlerSuccess(request.response);
+    if (request.status === StatusCode.OK) {
+      onSuccess(request.response);
     } else {
-      handlerError("Статус ответа: " + request.status + " " + request.statusText);
+      onError("Статус ответа: " + request.status + " " + request.statusText);
     }
   });
   request.addEventListener("error", function () {
-    handlerError("Произошла ошибка соединения");
+    onError("Произошла ошибка соединения");
   });
   request.addEventListener("timeout", function () {
-    handlerError("Запрос не успел выполниться за " + request.timeout + "мс");
+    onError("Запрос не успел выполниться за " + request.timeout + "мс");
   });
 }
 

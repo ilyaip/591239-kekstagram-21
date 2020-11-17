@@ -1,18 +1,18 @@
 'use strict';
 
-var RANDOM_COMMENTS = 10;
-var imgFilters = document.querySelector(".img-filters");
-var filterDefault = document.querySelector("#filter-default");
-var filterRandom = document.querySelector("#filter-random");
-var filterDiscussed = document.querySelector("#filter-discussed");
+const RANDOM_COMMENTS = 10;
+const imgFilters = document.querySelector(".img-filters");
+const filterDefault = document.querySelector("#filter-default");
+const filterRandom = document.querySelector("#filter-random");
+const filterDiscussed = document.querySelector("#filter-discussed");
 
-var pictures = [];
+let pictures = [];
 
 function cleanPictures() {
-  var userPictures = document.querySelectorAll(".picture");
-  for (var i = 0; i < userPictures.length; i++) {
-    userPictures[i].remove();
-  }
+  const userPictures = document.querySelectorAll(".picture");
+  userPictures.forEach(function (item) {
+    item.remove();
+  });
 }
 
 function cleanActiveButton() {
@@ -41,10 +41,10 @@ filterDefault.addEventListener("click", function () {
 filterRandom.addEventListener("click", function () {
   cleanPictures();
   cleanActiveButton();
-  var clonedPictures = [];
+  let clonedPictures = [];
   clonedPictures = clonedPictures.concat(pictures);
   window.debounce(function () {
-    for (var i = 0; i < RANDOM_COMMENTS; i++) {
+    for (let i = 0; i < RANDOM_COMMENTS; i++) {
       const randomElementIndex = Math.floor(Math.random() * clonedPictures.length);
       window.comments.renderPhoto(clonedPictures[randomElementIndex]);
       clonedPictures.splice(randomElementIndex, 1);
@@ -57,7 +57,7 @@ filterRandom.addEventListener("click", function () {
 filterDiscussed.addEventListener("click", function () {
   cleanPictures();
   cleanActiveButton();
-  var clonedPictures = [];
+  let clonedPictures = [];
   clonedPictures = clonedPictures.concat(pictures);
   clonedPictures.sort(function (left, right) {
     return right.comments.length - left.comments.length;
@@ -70,10 +70,10 @@ filterDiscussed.addEventListener("click", function () {
   filterDiscussed.classList.add("img-filters__button--active");
 });
 
-var successHandler = function (data) {
+function onSuccess(data) {
   pictures = data;
   imgFilters.classList.remove("img-filters--inactive");
   updateFilter(pictures);
-};
+}
 
-window.backend.load(successHandler, window.comments.errorHandler);
+window.backend.load(onSuccess, window.comments.onError);
