@@ -111,7 +111,7 @@ function renderPhoto(photo) {
 }
 
 function renderFiveComments(pictureArray) {
-  let fragment = document.createDocumentFragment();
+  const fragment = document.createDocumentFragment();
   pictureArray.comments.slice(maxComments, maxComments + DEFAULT_COMMENTS).forEach(function (item) {
     fragment.appendChild(createCommentsNew(item));
   });

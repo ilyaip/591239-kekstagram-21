@@ -41,8 +41,7 @@ filterDefault.addEventListener("click", function () {
 filterRandom.addEventListener("click", function () {
   cleanPictures();
   cleanActiveButton();
-  let clonedPictures = [];
-  clonedPictures = clonedPictures.concat(pictures);
+  const clonedPictures = pictures.slice();
   window.debounce(function () {
     for (let i = 0; i < RANDOM_COMMENTS; i++) {
       const randomElementIndex = Math.floor(Math.random() * clonedPictures.length);
@@ -57,8 +56,7 @@ filterRandom.addEventListener("click", function () {
 filterDiscussed.addEventListener("click", function () {
   cleanPictures();
   cleanActiveButton();
-  let clonedPictures = [];
-  clonedPictures = clonedPictures.concat(pictures);
+  const clonedPictures = pictures.slice();
   clonedPictures.sort(function (left, right) {
     return right.comments.length - left.comments.length;
   });
