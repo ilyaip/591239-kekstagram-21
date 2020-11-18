@@ -8,6 +8,7 @@ const previewFile = uploadImg.querySelector("img");
 const effectPreview = document.querySelectorAll(".effects__preview");
 const editingForm = document.querySelector(".img-upload__overlay");
 const body = document.querySelector("body");
+const buttonSubmit = document.querySelector(".img-upload__submit");
 const closeEditingForm = document.querySelector("#upload-cancel");
 const controlSmaller = document.querySelector(".scale__control--smaller");
 const controlBigger = document.querySelector(".scale__control--bigger");
@@ -18,52 +19,58 @@ const errorTemplate = document.querySelector("#error").content.querySelector(".e
 
 // Открытие и закрытие формы редактирования фото
 
-function openForm() {
+const openForm = () => {
   editingForm.classList.remove("hidden");
   body.classList.add("modal-open");
+  buttonSubmit.addEventListener("click", onButtonSubmitClick);
 
   document.addEventListener("keydown", onPopupEscPress);
-}
+};
 
-function closeForm() {
+const closeForm = () => {
   editingForm.classList.add("hidden");
   body.classList.remove("modal-open");
 
   document.removeEventListener("keydown", onPopupEscPress);
-}
+  buttonSubmit.removeEventListener("click", onButtonSubmitClick);
+};
 
-function cleanInput() {
+const cleanInput = () => {
   inputUploadFile.value = "";
-}
+};
 
-function onPopupEscPress(evt) {
+const onPopupEscPress = (evt) => {
   if ((inputHashtags !== document.activeElement) && (inputComment !== document.activeElement) && (evt.key === ESC_KEY)) {
     evt.preventDefault();
-    editingForm.classList.add("hidden");
-    body.classList.remove("modal-open");
     inputComment.value = "";
     inputHashtags.value = "";
     cleanInput();
+    closeForm();
   }
-}
+};
 
-function cleanFilters() {
+const cleanFilters = () => {
   uploadImg.style.filter = "none";
-}
+};
 
-closeEditingForm.addEventListener("click", function () {
+closeEditingForm.addEventListener("click", () => {
   closeForm();
   cleanInput();
   cleanFilters();
 });
 
+const onButtonSubmitClick = () => {
+  document.removeEventListener("keydown", onPopupEscPress);
+  buttonSubmit.removeEventListener("click", onButtonSubmitClick);
+};
+
 // Выбор загружаемой фотографии
 
-inputUploadFile.addEventListener("change", function () {
+inputUploadFile.addEventListener("change", () => {
   const file = inputUploadFile.files[0];
   const fileName = file.name.toLowerCase();
 
-  let matches = FILE_TYPES.some(function (ending) {
+  const matches = FILE_TYPES.some((ending) => {
     return fileName.endsWith(ending);
   });
 
@@ -73,9 +80,9 @@ inputUploadFile.addEventListener("change", function () {
     controlValue.value = "100%";
     uploadImg.style.transform = "scale(1)";
 
-    reader.addEventListener("load", function () {
+    reader.addEventListener("load", () => {
       previewFile.src = reader.result;
-      effectPreview.forEach(function (item) {
+      effectPreview.forEach((item) => {
         item.style.backgroundImage = `url("${reader.result}")`;
       });
     });

@@ -10,13 +10,13 @@ const inputHashtags = document.querySelector(".text__hashtags");
 const inputComment = document.querySelector(".text__description");
 const checkHashtags = /^#[a-zа-я0-9]{1,20}$/;
 
-inputHashtags.addEventListener('input', function () {
-  let hashtagsArray = inputHashtags.value.trim().toLowerCase().split(/\s+/);
-  hashtagsArray.forEach(function (item, i) {
-    let valueLength = item.length;
-    if (valueLength < MIN_HASHTAG_LENGTH) {
+inputHashtags.addEventListener('input', () => {
+  const hashtagsArray = inputHashtags.value.trim().toLowerCase().split(/\s+/);
+  hashtagsArray.forEach((item, i) => {
+    const {length} = item;
+    if (length < MIN_HASHTAG_LENGTH) {
       inputHashtags.setCustomValidity("Хэш-тег не может состоять только из #");
-    } else if (valueLength >= MAX_HASHTAG_LENGTH) {
+    } else if (length >= MAX_HASHTAG_LENGTH) {
       inputHashtags.setCustomValidity("Хэш-тег должен содержать не польше 20-ти символов");
     } else if (!checkHashtags.test(item)) {
       inputHashtags.setCustomValidity("Хэш-тег должен начинаться с # и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.");
@@ -25,7 +25,7 @@ inputHashtags.addEventListener('input', function () {
     } else {
       inputHashtags.setCustomValidity('');
     }
-    let duplicatedHashtags = hashtagsArray.filter(function (element) {
+    const duplicatedHashtags = hashtagsArray.filter((element) => {
       return element === item;
     });
     if (duplicatedHashtags.length > 1) {
@@ -34,7 +34,7 @@ inputHashtags.addEventListener('input', function () {
   });
 });
 
-inputComment.addEventListener("input", function () {
+inputComment.addEventListener("input", () => {
   if (inputComment.value.length > MAX_COMMENTS_LENGTH) {
     inputComment.setCustomValidity("Максимум 140 символов");
   } else {

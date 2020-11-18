@@ -52,27 +52,27 @@ const Effects = {
 
 window.dialog.controlValue.value = MAX_ZOOM + "%";
 
-function increaseZoom() {
-  let oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
-  let newValue = oldValue + STEP;
-  let result = newValue >= MAX_ZOOM ? MAX_ZOOM : newValue;
+const increaseZoom = () => {
+  const oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
+  const newValue = oldValue + STEP;
+  const result = newValue >= MAX_ZOOM ? MAX_ZOOM : newValue;
   window.dialog.controlValue.value = result + "%";
   uploadImg.style.transform = `scale(${result / 100})`;
-}
+};
 
-function decreaseZoom() {
-  let oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
-  let newValue = oldValue - STEP;
-  let result = newValue <= MIN_ZOOM ? MIN_ZOOM : newValue;
+const decreaseZoom = () => {
+  const oldValue = Number.parseInt(window.dialog.controlValue.value, 10);
+  const newValue = oldValue - STEP;
+  const result = newValue <= MIN_ZOOM ? MIN_ZOOM : newValue;
   window.dialog.controlValue.value = result + "%";
   uploadImg.style.transform = `scale(${result / 100})`;
-}
+};
 
-window.dialog.controlBigger.addEventListener("click", function () {
+window.dialog.controlBigger.addEventListener("click", () => {
   increaseZoom();
 });
 
-window.dialog.controlSmaller.addEventListener("click", function () {
+window.dialog.controlSmaller.addEventListener("click", () => {
   decreaseZoom();
 });
 
@@ -86,25 +86,25 @@ const uploadImg = document.querySelector(".img-upload__preview");
 const sliderWidth = document.querySelector(".effect-level__line");
 
 let currentEffect;
-let sliderDefaultValue = {
+const sliderDefaultValue = {
   left: "450px",
   width: "100%"
 };
 
-uploadForm.addEventListener("change", checkedInput);
+uploadForm.addEventListener("change", onInputChecked);
 
-function filterChange(evt) {
+const onfilterChange = (evt) => {
   if (evt.target && evt.target.matches('input[type="radio"]')) {
     uploadImg.style.filter = Filters[evt.target.value].DEFAULT;
   }
   currentEffect = evt.target.value;
   pinSlider.style.left = sliderDefaultValue.left;
   effectLevelDepth.style.width = sliderDefaultValue.width;
-}
+};
 
-uploadForm.addEventListener("change", filterChange);
+uploadForm.addEventListener("change", onfilterChange);
 
-function checkedInput() {
+function onInputChecked() {
   if (effectNone.checked) {
     pinField.classList.add("hidden");
   } else {
@@ -112,11 +112,11 @@ function checkedInput() {
   }
 }
 
-function getSaturation(value) {
+const getSaturation = (value) => {
   return Math.round(((Filters[currentEffect].MAX_VALUE - Filters[currentEffect].MIN_VALUE) * (value / sliderWidth.offsetWidth) + Filters[currentEffect].MIN_VALUE) * 100) / 100;
-}
+};
 
-function getValueSaturation(value) {
+const getValueSaturation = (value) => {
   switch (currentEffect) {
     case Effects.CHROME:
       uploadImg.style.filter = `grayscale(${getSaturation(value) + Filters[currentEffect].UNIT})`;
@@ -137,23 +137,23 @@ function getValueSaturation(value) {
       uploadImg.style.filter = "none";
       break;
   }
-}
+};
 
-pinSlider.addEventListener("mousedown", function (evt) {
+pinSlider.addEventListener("mousedown", (evt) => {
   evt.preventDefault();
 
-  let startX = evt.clientX;
+  const startX = evt.clientX;
 
-  let dragged = false;
+  const dragged = false;
 
-  function onMouseMove(moveEvt) {
+  const onMouseMove = (moveEvt) => {
     moveEvt.preventDefault();
 
     dragged = true;
 
-    let shift = startX - moveEvt.clientX;
+    const shift = startX - moveEvt.clientX;
     startX = moveEvt.clientX;
-    let newX = pinSlider.offsetLeft - shift;
+    const newX = pinSlider.offsetLeft - shift;
 
     if (newX > 0 && newX < sliderWidth.offsetWidth) {
       pinSlider.style.left = newX + "px";
@@ -162,22 +162,22 @@ pinSlider.addEventListener("mousedown", function (evt) {
 
     getValueSaturation(newX);
     pinSliderValue.value = Number.parseInt(effectLevelDepth.style.width, 10);
-  }
+  };
 
-  function onMouseUp(upEvt) {
+  const onMouseUp = (upEvt) => {
     upEvt.preventDefault();
 
     document.removeEventListener("mousemove", onMouseMove);
     document.removeEventListener("mouseup", onMouseUp);
 
     if (dragged) {
-      let onClickPreventDefault = function (clickEvt) {
+      let onClickPreventDefault = (clickEvt) => {
         clickEvt.preventDefault();
         pinSlider.removeEventListener('click', onClickPreventDefault);
       };
       pinSlider.addEventListener('click', onClickPreventDefault);
     }
-  }
+  };
 
 
   document.addEventListener("mousemove", onMouseMove);

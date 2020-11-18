@@ -8,41 +8,41 @@ const filterDiscussed = document.querySelector("#filter-discussed");
 
 let pictures = [];
 
-function cleanPictures() {
+const cleanPictures = () => {
   const userPictures = document.querySelectorAll(".picture");
-  userPictures.forEach(function (item) {
+  userPictures.forEach((item) => {
     item.remove();
   });
-}
+};
 
-function cleanActiveButton() {
+const cleanActiveButton = () => {
   filterRandom.classList.remove("img-filters__button--active");
   filterDefault.classList.remove("img-filters__button--active");
   filterDiscussed.classList.remove("img-filters__button--active");
-}
+};
 
-function updateFilter(data) {
-  data.forEach(function (item) {
+const updateFilter = (data) => {
+  data.forEach((item) => {
     window.comments.renderPhoto(item);
   });
-}
+};
 
-filterDefault.addEventListener("click", function () {
+filterDefault.addEventListener("click", () => {
   cleanPictures();
   cleanActiveButton();
-  window.debounce(function () {
-    pictures.forEach(function (item) {
+  window.debounce(() => {
+    pictures.forEach((item) => {
       window.comments.renderPhoto(item);
     });
   });
   filterDefault.classList.add("img-filters__button--active");
 });
 
-filterRandom.addEventListener("click", function () {
+filterRandom.addEventListener("click", () => {
   cleanPictures();
   cleanActiveButton();
   const clonedPictures = pictures.slice();
-  window.debounce(function () {
+  window.debounce(() => {
     for (let i = 0; i < RANDOM_COMMENTS; i++) {
       const randomElementIndex = Math.floor(Math.random() * clonedPictures.length);
       window.comments.renderPhoto(clonedPictures[randomElementIndex]);
@@ -53,25 +53,25 @@ filterRandom.addEventListener("click", function () {
   filterRandom.classList.add("img-filters__button--active");
 });
 
-filterDiscussed.addEventListener("click", function () {
+filterDiscussed.addEventListener("click", () => {
   cleanPictures();
   cleanActiveButton();
   const clonedPictures = pictures.slice();
-  clonedPictures.sort(function (left, right) {
+  clonedPictures.sort((left, right) => {
     return right.comments.length - left.comments.length;
   });
-  window.debounce(function () {
-    clonedPictures.forEach(function (item) {
+  window.debounce(() => {
+    clonedPictures.forEach((item) => {
       window.comments.renderPhoto(item);
     });
   });
   filterDiscussed.classList.add("img-filters__button--active");
 });
 
-function onSuccess(data) {
+const onSuccess = (data) => {
   pictures = data;
   imgFilters.classList.remove("img-filters--inactive");
   updateFilter(pictures);
-}
+};
 
 window.backend.load(onSuccess, window.comments.onError);

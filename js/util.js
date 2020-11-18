@@ -1,9 +1,8 @@
 'use strict';
 
-function getRandomElement(array) {
-  let randomElementIndex = Math.floor(Math.random() * array.length);
-  return array[randomElementIndex];
-}
+const getRandomElement = (array) => {
+  return array[Math.floor(Math.random() * array.length)];
+};
 
 window.utils = {
   getRandomElement

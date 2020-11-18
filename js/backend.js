@@ -8,38 +8,38 @@ const StatusCode = {
   OK: 200
 };
 
-function upload(data, onSuccess, onError) {
+const upload = (data, onSuccess, onError) => {
   const xhr = new XMLHttpRequest();
   handleLoad(onSuccess, onError, xhr);
   xhr.open("POST", URL_POST);
   xhr.send(data);
-}
+};
 
-function load(onSuccess, onError) {
+const load = (onSuccess, onError) => {
   const xhr = new XMLHttpRequest();
   handleLoad(onSuccess, onError, xhr);
   xhr.open("GET", URL_GET);
   xhr.send();
-}
+};
 
-function handleLoad(onSuccess, onError, request) {
+const handleLoad = (onSuccess, onError, request) => {
   request.responseType = "json";
   request.timeout = TIMEOUT_IN_MS;
 
-  request.addEventListener("load", function () {
+  request.addEventListener("load", () => {
     if (request.status === StatusCode.OK) {
       onSuccess(request.response);
     } else {
       onError("Статус ответа: " + request.status + " " + request.statusText);
     }
   });
-  request.addEventListener("error", function () {
+  request.addEventListener("error", () => {
     onError("Произошла ошибка соединения");
   });
-  request.addEventListener("timeout", function () {
+  request.addEventListener("timeout", () => {
     onError("Запрос не успел выполниться за " + request.timeout + "мс");
   });
-}
+};
 
 window.backend = {
   upload,
